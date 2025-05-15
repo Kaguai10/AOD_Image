@@ -34,7 +34,7 @@ The `encode_aod.py` script is used to convert a `.png` file into an `.aod` file.
 ### 🔧 Usage
 
 ```bash
-python encode_aod.py input.png output.aod
+python encode_aod.py
 ```
 
 ### ✅ Features:
@@ -52,7 +52,7 @@ The `decode_aod.py` script is used to read and extract `.aod` files back into `.
 ### 🔧 Usage
 
 ```bash
-python decode_aod.py input.aod output.png
+python decode_aod.py
 ```
 
 ### ✅ Features:
