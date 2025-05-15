@@ -4,90 +4,90 @@
 
 # 🖼 AOD - *Art Of Data* Image Format
 
-**AOD** is an experimental image format based on a chunked file structure, designed to store image data in either raw or compressed form, with optional metadata support. It is inspired by PNG but simplified and modified for educational and forensic research purposes.
+**AOD** adalah format gambar eksperimental yang menggunakan struktur file berbasis *chunk*, dirancang untuk menyimpan data gambar dalam bentuk mentah (*raw*) atau terkompresi, dengan dukungan metadata opsional. Format ini terinspirasi dari PNG namun disederhanakan dan dimodifikasi untuk tujuan edukasi dan penelitian forensik.
 
 ---
 
-## 📦 AOD File Structure
+## 📦 Struktur File AOD
 
-| Offset | Size    | Field                | Description                                   |
-|--------|---------|----------------------|-----------------------------------------------|
-| 0      | 4 bytes | `AOD1`               | Magic number + format version                 |
-| 4      | 4 bytes | `HDRC`               | Header chunk ID                               |
-| 8      | 4 bytes | Width (big-endian)   | Image width                                   |
-| 12     | 4 bytes | Height (big-endian)  | Image height                                  |
-| 16     | 1 byte  | Color depth          | 3 = RGB, 4 = RGBA                              |
-| 17     | 1 byte  | Compression flag     | 0 = None, 1 = zlib compression                 |
-| 18     | n bytes | `META` chunks (opt)  | Optional metadata (author, description, etc.) |
-| ??     | 4 bytes | `PXDT`               | Chunk ID for pixel data                       |
-| ??     | 4 bytes | Data length          | Length of pixel data (compressed or raw)      |
-| ??     | n bytes | Image data           | Actual image bytes                            |
-| ??     | 4 bytes | `FOOT`               | Footer chunk ID                               |
-| ??     | 4 bytes | CRC32                | CRC checksum of image data                    |
+| Offset | Ukuran   | Field                | Deskripsi                                           |
+|--------|----------|----------------------|-----------------------------------------------------|
+| 0      | 4 byte   | `AOD1`               | Magic number + versi format                         |
+| 4      | 4 byte   | `HDRC`               | ID *chunk* header                                   |
+| 8      | 4 byte   | Width (big-endian)   | Lebar gambar                                        |
+| 12     | 4 byte   | Height (big-endian)  | Tinggi gambar                                       |
+| 16     | 1 byte   | Kedalaman warna      | 3 = RGB, 4 = RGBA                                   |
+| 17     | 1 byte   | Flag kompresi        | 0 = Tidak ada, 1 = zlib kompresi                   |
+| 18     | n byte   | *Chunk* `META` (ops) | Metadata opsional (penulis, deskripsi, dll.)        |
+| ??     | 4 byte   | `PXDT`               | ID *chunk* untuk data piksel                        |
+| ??     | 4 byte   | Panjang data         | Panjang data piksel (terkompresi atau mentah)       |
+| ??     | n byte   | Data gambar          | Data gambar sebenarnya                              |
+| ??     | 4 byte   | `FOOT`               | ID *chunk* penutup                                  |
+| ??     | 4 byte   | CRC32                | CRC checksum dari data gambar                      |
 
 ---
 
 ## 🛠 Encoder
 
-The `encode_aod.py` script is used to convert a `.png` file into an `.aod` file.
+Script `encode_aod.py` digunakan untuk mengubah file `.png` menjadi file `.aod`.
 
-### 🔧 Usage
+### 🔧 Penggunaan
 
 ```bash
 python encode_aod.py
 ```
 
-### ✅ Features:
-- Optional zlib compression for pixel data
-- Embeds metadata such as `Author`
-- Supports RGB and RGBA images
-- Automatically generates CRC32 checksum
+### ✅ Fitur:
+- Kompresi data piksel opsional menggunakan zlib  
+- Menyisipkan metadata seperti `Author`  
+- Mendukung gambar RGB dan RGBA  
+- Secara otomatis menghasilkan checksum CRC32
 
 ---
 
 ## 🔎 Decoder
 
-The `decode_aod.py` script is used to read and extract `.aod` files back into `.png`.
+Script `decode_aod.py` digunakan untuk membaca dan mengekstrak file `.aod` kembali menjadi `.png`.
 
-### 🔧 Usage
+### 🔧 Penggunaan
 
 ```bash
 python decode_aod.py
 ```
 
-### ✅ Features:
-- Validates magic number and chunk structure
-- Automatically decompresses pixel data if compressed
-- Extracts embedded metadata
-- Verifies CRC to detect corrupted files
+### ✅ Fitur:
+- Memvalidasi magic number dan struktur *chunk*  
+- Secara otomatis mendekompresi data jika terkompresi  
+- Mengekstrak metadata yang disisipkan  
+- Memverifikasi CRC untuk mendeteksi file yang rusak
 
 ---
 
-## 📋 Supported Metadata Format
+## 📋 Format Metadata yang Didukung
 
-Metadata is stored in `META` chunks with a simple format:
+Metadata disimpan dalam *chunk* `META` dengan format sederhana:
 
-| Type (2 bytes) | Length (2 bytes) | Value (n bytes) |
-|----------------|------------------|------------------|
-| `0x01`         | length            | Author           |
-| `0x02`         | length            | Description      |
-| …              | …                 | …                |
+| Tipe (2 byte) | Panjang (2 byte) | Nilai (n byte) |
+|---------------|------------------|----------------|
+| `0x01`        | panjang           | Penulis        |
+| `0x02`        | panjang           | Deskripsi      |
+| …             | …                 | …              |
 
-You can define your own tags as long as they follow the same structure.
-
----
-
-## 💡 Why AOD?
-
-AOD is more than just an image format — it’s an *educational and analytical format*. It was created to:
-- Teach how chunk-based file formats work
-- Be used in Capture The Flag (CTF) challenges for encoding or steganography
-- Provide a lightweight and fully controlled alternative to PNG
+Kamu bisa mendefinisikan tag sendiri selama mengikuti struktur yang sama.
 
 ---
 
-## 🔐 Security Note
+## 💡 Kenapa AOD?
 
-- Not intended for production use
-- Does not support advanced features like transparency or animation
-- Ideal for research, training, and security challenges
+AOD bukan hanya sekadar format gambar — ini adalah *format edukatif dan analitis*. AOD dibuat untuk:
+- Mengajarkan bagaimana format file berbasis *chunk* bekerja  
+- Digunakan dalam tantangan Capture The Flag (CTF), misalnya untuk encoding atau steganografi  
+- Menjadi alternatif ringan dan sepenuhnya terkontrol dibandingkan PNG
+
+---
+
+## 🔐 Catatan Keamanan
+
+- Tidak ditujukan untuk penggunaan produksi  
+- Tidak mendukung fitur lanjutan seperti transparansi atau animasi  
+- Ideal untuk riset, pelatihan, dan tantangan keamanan
